@@ -1,25 +1,25 @@
 version: '3'
 services:
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - web
-
-  # nginx_ssl:
+  # nginx:
   #   image: nginx:latest
   #   ports:
-  #     - "443:443"
   #     - "80:80"
   #   volumes:
-  #     - ./nginx/ssl.conf:/etc/nginx/conf.d/default.conf
-  #     - ./nginx/certs:/etc/nginx/certs
+  #     - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
   #   depends_on:
   #     - web
-  #     - certbot
+
+  nginx_ssl:
+    image: nginx:latest
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx/ssl.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/certs:/etc/nginx/certs
+    depends_on:
+      - web
+      - certbot
 
   web:
     build: ./web
@@ -29,5 +29,5 @@ services:
     volumes:
       - ./nginx/certs:/etc/nginx/certs
       - ./scripts:/scripts   # Mount the scripts directory
-    command: "/scripts/create_ssl.sh"  # Run the SSL creation script
+    entrypoint: "/scripts/create_ssl.sh"  # Run the SSL creation script
 
