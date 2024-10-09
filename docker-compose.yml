@@ -28,5 +28,6 @@ services:
     image: certbot/certbot
     volumes:
       - ./nginx/certs:/etc/nginx/certs
-    entrypoint: "/scripts/create_ssl.sh"
+      - ./scripts:/scripts   # Mount the scripts directory
+    command: "/scripts/create_ssl.sh"  # Run the SSL creation script
 
